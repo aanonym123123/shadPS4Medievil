@@ -282,7 +282,25 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
     if (is_new) {
         const auto pipeline_hash = std::hash<GraphicsPipelineKey>{}(graphics_key);
         LOG_INFO(Render_Vulkan, "Compiling graphics pipeline {:#x}", pipeline_hash);
-
+        
+        // === CUSTOM HACK: skip specific pipeline hashes ===
+        static constexpr u64 bad_hashes[] = {
+            0x3a5cf809287dcbbULL,
+            0xedbdc9694fd84dd6ULL
+        };
+        
+        for (u64 bad : bad_hashes) {
+            if (pipeline_hash == bad) {
+                LOG_WARNING(Render_Vulkan, "Skipping graphics pipeline {:#x}", pipeline_hash);
+                
+                // Insert dummy pipeline (empty object)
+                it.value() = std::make_unique<GraphicsPipeline>();
+                
+                return it->second.get();
+            }
+        }
+        // =============================================
+        
         it.value() = std::make_unique<GraphicsPipeline>(instance, scheduler, desc_heap, profile,
                                                         graphics_key, *pipeline_cache, infos,
                                                         runtime_infos, fetch_shader, modules);
