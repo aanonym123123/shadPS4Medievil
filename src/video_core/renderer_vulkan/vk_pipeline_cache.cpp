@@ -293,10 +293,7 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
         for (u64 bad : bad_hashes) {
             if (pipeline_hash == bad) {
                 LOG_WARNING(Render_Vulkan, "Skipping bad graphics pipeline {:#x}", pipeline_hash);
-
-                // Insert dummy pipeline (empty object) so engine doesn't get nullptr
-                it.value() = std::make_unique<GraphicsPipeline>();
-                return it->second.get();
+                return nullptr;
             }
         }
         // ============================================================
