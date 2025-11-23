@@ -288,7 +288,8 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
             0x3a5cf809287dcbbULL,
             0xedbdc9694fd84dd6ULL,
             0x66548f0d4d75edc3ULL,
-            0xb05eb46a55d00f7eULL
+            0xb05eb46a55d00f7eULL,
+            0xefb4b565602584d4ULL
         };
 
         for (u64 bad : bad_hashes) {
