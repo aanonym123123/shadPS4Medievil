@@ -287,7 +287,8 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
         static constexpr u64 bad_hashes[] = {
             0x3a5cf809287dcbbULL,
             0xedbdc9694fd84dd6ULL,
-            0x66548f0d4d75edc3ULL  // NEW pipeline causing crash
+            0x66548f0d4d75edc3ULL,
+            0xb05eb46a55d00f7eULL
         };
 
         for (u64 bad : bad_hashes) {
