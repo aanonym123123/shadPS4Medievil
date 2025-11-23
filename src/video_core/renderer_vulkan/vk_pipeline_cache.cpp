@@ -519,8 +519,8 @@ vk::ShaderModule PipelineCache::CompileModule(Shader::Info& info, Shader::Runtim
                                               Shader::Backend::Bindings& binding) {
     // LOG_INFO(Render_Vulkan, "Compiling {} shader {:#x} {}", info.stage, info.pgm_hash,
     //         perm_idx != 0 ? "(permutation)" : "");
-    LOG_INFO(Render_Vulkan, "Compiling {} shader hash={:#018x} {}", Shader::GetStageName(info.stage), static_cast<u64>(info.pgm_hash),
-            perm_idx != 0 ? "(permutation)" : "");
+    LOG_INFO(Render_Vulkan, "Compiling {} shader hash={:#018x} {}", info.stage, static_cast<u64>(info.pgm_hash),
+             perm_idx != 0 ? "(permutation)" : "");
     // Skip specific shader hash 
     if (info.pgm_hash == 0x3a5cf809287dcbbULL || info.pgm_hash == 0xe9036a9995fb326fULL) {
         LOG_WARNING(Render_Vulkan, "Skipping shader {:#x}", info.pgm_hash);
