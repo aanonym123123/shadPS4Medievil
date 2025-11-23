@@ -282,25 +282,7 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
     if (is_new) {
         const auto pipeline_hash = std::hash<GraphicsPipelineKey>{}(graphics_key);
         LOG_INFO(Render_Vulkan, "Compiling graphics pipeline {:#x}", pipeline_hash);
-        
-        // === CUSTOM HACK: skip specific pipeline hashes ===
-        static constexpr u64 bad_hashes[] = {
-            0x3a5cf809287dcbbULL,
-            0xedbdc9694fd84dd6ULL
-        };
-        
-        for (u64 bad : bad_hashes) {
-            if (pipeline_hash == bad) {
-                LOG_WARNING(Render_Vulkan, "Skipping graphics pipeline {:#x}", pipeline_hash);
-                
-                // Insert dummy pipeline (empty object)
-                it.value() = std::make_unique<GraphicsPipeline>();
-                
-                return it->second.get();
-            }
-        }
-        // =============================================
-        
+    
         it.value() = std::make_unique<GraphicsPipeline>(instance, scheduler, desc_heap, profile,
                                                         graphics_key, *pipeline_cache, infos,
                                                         runtime_infos, fetch_shader, modules);
@@ -535,8 +517,12 @@ bool PipelineCache::RefreshComputeKey() {
 vk::ShaderModule PipelineCache::CompileModule(Shader::Info& info, Shader::RuntimeInfo& runtime_info,
                                               std::span<const u32> code, size_t perm_idx,
                                               Shader::Backend::Bindings& binding) {
-    LOG_INFO(Render_Vulkan, "Compiling {} shader {:#x} {}", info.stage, info.pgm_hash,
-             perm_idx != 0 ? "(permutation)" : "");
+    // LOG_INFO(Render_Vulkan, "Compiling {} shader {:#x} {}", info.stage, info.pgm_hash,
+    //         perm_idx != 0 ? "(permutation)" : "");
+    LOG_INFO(Render_Vulkan, "Compiling {} shader hash={:#018x} {}",
+         Shader::GetStageName(info.stage),
+         static_cast<u64>(info.pgm_hash),
+         perm_idx != 0 ? "(permutation)" : "");
     // Skip specific shader hash 
     if (info.pgm_hash == 0x3a5cf809287dcbbULL || info.pgm_hash == 0xe9036a9995fb326fULL) {
         LOG_WARNING(Render_Vulkan, "Skipping shader {:#x}", info.pgm_hash);
