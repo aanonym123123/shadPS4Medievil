@@ -523,6 +523,11 @@ vk::ShaderModule PipelineCache::CompileModule(Shader::Info& info, Shader::Runtim
 
     const auto ir_program = Shader::TranslateProgram(code, pools, info, runtime_info, profile);
     auto spv = Shader::Backend::SPIRV::EmitSPIRV(profile, runtime_info, ir_program, binding);
+    // Skip specific shader hash
+    if (info.pgm_hash == 0x3a5cf809287dcbbULL || info.pgm_hash == 0xe9036a9995fb326fULL) {
+        LOG_WARNING(Render_Vulkan, "Skipping shader {:#x}", info.pgm_hash);
+        return vk::ShaderModule{}; // Return empty module to skip compilation
+    }
     DumpShader(spv, info.pgm_hash, info.stage, perm_idx, "spv");
 
     vk::ShaderModule module;
