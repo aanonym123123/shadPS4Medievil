@@ -540,7 +540,7 @@ vk::ShaderModule PipelineCache::CompileModule(Shader::Info& info, Shader::Runtim
     LOG_INFO(Render_Vulkan, "Compiling {} shader hash={:#018x} {}", info.stage, static_cast<u64>(info.pgm_hash),
              perm_idx != 0 ? "(permutation)" : "");
     // Skip specific shader hash 
-    if (info.pgm_hash == 0x3a5cf809287dcbbULL || info.pgm_hash == 0xe9036a9995fb326fULL || info.pgm_hash == 0x66548f0d4d75edc3ULL || info.pgm_hash == 0x41d910ca9733a3d4ULL || info.pgm_hash == 0xf7457b588a024e47ULL || info.pgm_hash == 0xf7457b588f171402ULL || info.pgm_hash == 0x1f74f351990f90a0ULL) {
+    if (info.pgm_hash == 0x3a5cf809287dcbbULL || info.pgm_hash == 0xe9036a9995fb326fULL || info.pgm_hash == 0x66548f0d4d75edc3ULL || info.pgm_hash == 0x41d910ca9733a3d4ULL || info.pgm_hash == 0xf7457b588a024e47ULL) {
         LOG_WARNING(Render_Vulkan, "Skipping shader {:#x}", info.pgm_hash);
         return vk::ShaderModule{}; // Return empty module to skip compilation
     }
