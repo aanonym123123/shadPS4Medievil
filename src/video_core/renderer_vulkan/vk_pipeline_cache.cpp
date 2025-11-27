@@ -307,6 +307,20 @@ const ComputePipeline* PipelineCache::GetComputePipeline() {
         const auto pipeline_hash = std::hash<ComputePipelineKey>{}(compute_key);
         LOG_INFO(Render_Vulkan, "Compiling compute pipeline {:#x}", pipeline_hash);
 
+        // === CUSTOM HACK: skip specific compute pipelines to avoid crash ===
+        static constexpr u64 bad_compute_hashes[] = {
+            0x495e1827704ea06eULL // Crash point from log
+        };
+
+        for (u64 bad : bad_compute_hashes) {
+            if (pipeline_hash == bad) {
+                LOG_WARNING(Render_Vulkan,
+                            "Skipping bad compute pipeline {:#x}", pipeline_hash);
+                return nullptr; // Skip pipeline → avoid crash
+            }
+        }
+        // ==================================================================
+        
         it.value() =
             std::make_unique<ComputePipeline>(instance, scheduler, desc_heap, profile,
                                               *pipeline_cache, compute_key, *infos[0], modules[0]);
