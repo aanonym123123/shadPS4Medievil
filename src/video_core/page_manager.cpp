@@ -258,10 +258,12 @@ struct PageManager::Impl {
         // MediEvil hack: skip partially GPU-mapped regions
         if (!rasterizer->IsMapped(aligned_addr, aligned_end - aligned_addr)) {
         LOG_DEBUG(Render,
-              "Skipping partially GPU-mapped region {:#x} - {:#x}",
-              aligned_addr, aligned_end);
-        return; // Preskočíme spracovanie týchto stránok
-        }
+                  "Partially GPU-mapped region {:#x} - {:#x}, using fallback perms",
+                  aligned_addr, aligned_end);
+        for (u64 p = page; p < page_end; ++p) {
+            cached_pages[p].SetFallbackPerms(); // fiktívna funkcia, nastaví safe perms
+            }
+        }    
         // Koniec hacku
         
         for (; page != page_end; ++page) {
