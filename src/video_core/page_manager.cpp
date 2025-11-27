@@ -247,25 +247,12 @@ struct PageManager::Impl {
 
         // Iterate requested pages
         const u64 aligned_addr = page << PAGE_BITS;
-        const u64 aligned_end = page_end << PAGE_BITS;
-/*     
+        const u64 aligned_end = page_end << PAGE_BITS;  
         if (!rasterizer->IsMapped(aligned_addr, aligned_end - aligned_addr)) {
             LOG_WARNING(Render,
                         "Tracking memory region {:#x} - {:#x} which is not fully GPU mapped.",
                         aligned_addr, aligned_end);
         }
-*/
-        // MediEvil hack: skip partially GPU-mapped regions
-        if (!rasterizer->IsMapped(aligned_addr, aligned_end - aligned_addr)) {
-        LOG_DEBUG(Render,
-                  "Partially GPU-mapped region {:#x} - {:#x}, using fallback perms",
-                  aligned_addr, aligned_end);
-        for (u64 p = page; p < page_end; ++p) {
-            cached_pages[p].perms = PageState::READ | PageState::WRITE;
-            }
-        }    
-        // Koniec hacku
-        
         for (; page != page_end; ++page) {
             PageState& state = cached_pages[page];
 
