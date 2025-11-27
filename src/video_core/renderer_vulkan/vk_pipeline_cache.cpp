@@ -282,7 +282,7 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
     if (is_new) {
         const auto pipeline_hash = std::hash<GraphicsPipelineKey>{}(graphics_key);
         LOG_INFO(Render_Vulkan, "Compiling graphics pipeline {:#x}", pipeline_hash);
-        
+ /*       
      // === CUSTOM HACK: skip specific pipelines to avoid crash ===
         static constexpr u64 bad_hashes[] = {
             0x3a5cf809287dcbbULL,
@@ -300,7 +300,7 @@ const GraphicsPipeline* PipelineCache::GetGraphicsPipeline() {
             }
         }
         // ============================================================
-
+*/
         it.value() = std::make_unique<GraphicsPipeline>(instance, scheduler, desc_heap, profile,
                                                         graphics_key, *pipeline_cache, infos,
                                                         runtime_infos, fetch_shader, modules);
@@ -539,11 +539,13 @@ vk::ShaderModule PipelineCache::CompileModule(Shader::Info& info, Shader::Runtim
     //         perm_idx != 0 ? "(permutation)" : "");
     LOG_INFO(Render_Vulkan, "Compiling {} shader hash={:#018x} {}", info.stage, static_cast<u64>(info.pgm_hash),
              perm_idx != 0 ? "(permutation)" : "");
+  /*  
     // Skip specific shader hash 
     if (info.pgm_hash == 0x3a5cf809287dcbbULL || info.pgm_hash == 0xe9036a9995fb326fULL || info.pgm_hash == 0x66548f0d4d75edc3ULL || info.pgm_hash == 0x41d910ca9733a3d4ULL) {
         LOG_WARNING(Render_Vulkan, "Skipping shader {:#x}", info.pgm_hash);
         return vk::ShaderModule{}; // Return empty module to skip compilation
     }
+  */  
     DumpShader(code, info.pgm_hash, info.stage, perm_idx, "bin");
 
     const auto ir_program = Shader::TranslateProgram(code, pools, info, runtime_info, profile);
